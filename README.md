@@ -4,7 +4,7 @@ Planning tools for people 3D-printing their own Rokenbok parts: a parts database
 
 **Stack:** React (Vite) · Node.js / Express · MongoDB (Mongoose)
 
-> Status: weekend project, work in progress. Right now you get the parts database, a REST API, and a catalog page.
+> Status: weekend project, work in progress. Right now you get the parts database, a REST API, and a bill-of-materials builder that totals filament, print time, cost and spool usage.
 
 ## Project layout
 
@@ -67,6 +67,24 @@ Open http://localhost:5173. The API is at http://localhost:5000/api/health.
 | POST | `/api/parts` | Create a part |
 | PUT | `/api/parts/:id` | Update a part |
 | DELETE | `/api/parts/:id` | Delete a part |
+| POST | `/api/bom/calculate` | Totals for a bill of materials (see below) |
+
+### Calculate a bill of materials
+
+`POST /api/bom/calculate`
+
+```json
+{
+  "items": [
+    { "partId": "<part _id>", "quantity": 10 },
+    { "partId": "<part _id>", "quantity": 4 }
+  ],
+  "costPerKg": 20,
+  "spoolGrams": 1000
+}
+```
+
+`costPerKg` defaults to 0 and `spoolGrams` (optional) to 1000. Duplicate `partId`s are merged. Quantities must be whole numbers from 1 to 100000. The response has per-part `lines` (quantity, filament grams, print seconds and cost subtotal) and a `totals` object: part count, filament grams, print time (seconds, one printer), cost, and spool usage (`spoolsUsed` is a fraction, e.g. 0.63 = 63% of one spool; `spoolsToBuy` is rounded up).
 
 ## Part data model
 
@@ -83,8 +101,18 @@ Open http://localhost:5173. The API is at http://localhost:5000/api/health.
 
 Starter parts are in `server/src/data/parts.js`; edit the numbers there and re-run `npm run seed`.
 
+## Tests
+```
+npm test --prefix server
+```
+Covers the BOM math and validation. No database needed.
+
+## Saved builds
+The current build and price per kg are saved in the browser's `localStorage`, so they survive a refresh but only exist in that browser. Saving builds to MongoDB (so they follow you between devices, and can be shared) is planned; the only client code that would change is `client/src/hooks/useLocalStorage.js`.
+
 ## Roadmap
-- Bill of materials builder with filament cost totals
+- ~~Bill of materials builder with filament cost totals~~ (done)
+- Save builds to MongoDB
 - Space/footprint calculator
 - AI parts-list parser (Claude API)
 - Later: 3D build planner
