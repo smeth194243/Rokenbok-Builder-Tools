@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { GRID_UNIT_MM } from '../constants.js';
 
 const { Schema } = mongoose;
 
 // A Rokenbok building is grid based: one grid unit = 20 mm.
-export const GRID_UNIT_MM = 20;
+export { GRID_UNIT_MM };
 
 const sizeSchema = new Schema(
   {

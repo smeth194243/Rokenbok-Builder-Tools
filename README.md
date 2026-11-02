@@ -4,7 +4,7 @@ Planning tools for people 3D-printing their own Rokenbok parts: a parts database
 
 **Stack:** React (Vite) · Node.js / Express · MongoDB (Mongoose)
 
-> Status: weekend project, work in progress. Right now you get the parts database, a REST API, and a bill-of-materials builder that totals filament, print time, cost and spool usage.
+> Status: weekend project, work in progress. Right now you get the parts database, a REST API, and a bill-of-materials builder (filament, print time, cost, spool usage) and a footprint calculator, on separate pages.
 
 ## Project layout
 
@@ -68,6 +68,7 @@ Open http://localhost:5173. The API is at http://localhost:5000/api/health.
 | PUT | `/api/parts/:id` | Update a part |
 | DELETE | `/api/parts/:id` | Delete a part |
 | POST | `/api/bom/calculate` | Totals for a bill of materials (see below) |
+| POST | `/api/footprint/calculate` | Convert blocks / grid units / real-world sizes (see below) |
 
 ### Calculate a bill of materials
 
@@ -85,6 +86,20 @@ Open http://localhost:5173. The API is at http://localhost:5000/api/health.
 ```
 
 `costPerKg` defaults to 0 and `spoolGrams` (optional) to 1000. Duplicate `partId`s are merged. Quantities must be whole numbers from 1 to 100000. The response has per-part `lines` (quantity, filament grams, print seconds and cost subtotal) and a `totals` object: part count, filament grams, print time (seconds, one printer), cost, and spool usage (`spoolsUsed` is a fraction, e.g. 0.63 = 63% of one spool; `spoolsToBuy` is rounded up).
+
+### Footprint conversions
+
+`POST /api/footprint/calculate`
+
+```json
+{ "unit": "ft", "length": 4, "width": 3, "height": 2 }
+```
+
+`unit` is one of `blocks`, `units` (20 mm grid units), `mm`, `cm`, `in`, `ft`, `m` and applies to every dimension. `height` is optional. Block and grid-unit values must be whole numbers.
+
+A **block** is a measure of length: one full beam with a connector cube on each end (9 grid units, 180 mm). Each additional beam and cube adds another block (8 more units, 160 mm), so n blocks span `8n + 1` grid units: 1 block = 180 mm, 2 = 340 mm, 3 = 500 mm. The spacing lives in `server/src/constants.js` if it ever needs adjusting.
+
+It works both ways: give it blocks or grid units to get exact real-world sizes, or give it a real-world size to get the largest whole number of blocks and grid units that fits (plus leftover space). The response has `dimensions` (per axis: `exact` measurements in mm/cm/in/ft/m and `fit` with whole units, blocks and leftover mm) and floor `area` (`exact`, and `fit` for the whole-grid area).
 
 ## Part data model
 
@@ -112,6 +127,7 @@ The current build and price per kg are saved in the browser's `localStorage`, so
 
 ## Roadmap
 - ~~Bill of materials builder with filament cost totals~~ (done)
+- ~~Footprint calculator (blocks / grid units / real-world sizes)~~ (done)
 - Save builds to MongoDB
 - Space/footprint calculator
 - AI parts-list parser (Claude API)

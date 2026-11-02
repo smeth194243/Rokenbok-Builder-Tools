@@ -18,3 +18,12 @@ export const calculateBom = (items, costPerKg, signal) =>
     body: JSON.stringify({ items, costPerKg }),
     signal,
   })
+
+// input: { unit, length, width, height? }
+export const calculateFootprint = (input, signal) =>
+  request('/footprint/calculate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+    signal,
+  })

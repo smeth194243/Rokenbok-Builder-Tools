@@ -14,3 +14,6 @@ export const formatMoney = (n) => `$${n.toFixed(2)}`
 export function formatGrams(g) {
   return g >= 1000 ? `${(g / 1000).toFixed(2)} kg` : `${g} g`
 }
+
+// 1234.5 -> "1,234.5" (at most 3 decimals)
+export const formatNumber = (n) => Number(n).toLocaleString(undefined, { maximumFractionDigits: 3 })
