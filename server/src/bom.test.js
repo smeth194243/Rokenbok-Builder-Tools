@@ -8,7 +8,8 @@ import { parts as seedParts } from './data/parts.js';
 
 // Give the seed parts fake ids so we can test without a database.
 const ids = ['a'.repeat(24), 'b'.repeat(24), 'c'.repeat(24), 'd'.repeat(24)];
-const parts = seedParts.map((p, i) => ({ ...p, _id: ids[i] }));
+// These tests rely on the first four seed parts (cube, full beam, half beam, riser).
+const parts = seedParts.slice(0, 4).map((p, i) => ({ ...p, _id: ids[i] }));
 const [CUBE, FULL, HALF, RISER] = ids;
 const opts = { costPerKg: 20, spoolGrams: 1000 };
 

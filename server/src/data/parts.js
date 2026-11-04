@@ -46,4 +46,76 @@ export const parts = [
     printTimeSeconds: time(16, 16),
     modelUrl: MODEL_URL,
   },
+
+  // ---------------------------------------------------------------------------
+  // The parts below were added with ESTIMATED print details (filament and time).
+  // They were scaled from the measured parts above (beams run roughly 2.4-2.5 g
+  // and 7-8 minutes per grid unit of length) and still need real numbers from
+  // the slicer. dimensionsMm is left out: it is derived from gridSize (20 mm/unit).
+  // ---------------------------------------------------------------------------
+  {
+    name: 'Curved Beam',
+    category: 'curved beam',
+    description: 'Curved beam that connects two opposite corners within a block (8 x 8 grid units).',
+    gridSize: { length: 8, width: 8, height: 1 },
+    filamentGrams: 31, // arc is about 12.6 units long
+    printTimeSeconds: time(94, 0),
+    modelUrl: MODEL_URL,
+  },
+  {
+    name: 'Small Curved Beam',
+    category: 'curved beam',
+    description: 'Half-size curved beam that connects two perpendicular half beams within a block (4 x 4 grid units).',
+    gridSize: { length: 4, width: 4, height: 1 },
+    filamentGrams: 15.5, // arc is about 6.3 units long
+    printTimeSeconds: time(47, 0),
+    modelUrl: MODEL_URL,
+  },
+  {
+    name: 'Mini Curved Beam',
+    category: 'curved beam',
+    description: 'Quarter-size curved beam that connects two perpendicular risers (2 x 2 grid units).',
+    gridSize: { length: 2, width: 2, height: 1 },
+    filamentGrams: 7.8, // arc is about 3.1 units long
+    printTimeSeconds: time(23, 30),
+    modelUrl: MODEL_URL,
+  },
+  {
+    name: 'Deck Plate',
+    category: 'plate',
+    description:
+      'Sits on top of a square block as a platform for vehicles to drive on. Covers a full 9 x 9 unit block; the plate itself measures 8 x 8 units.',
+    gridSize: { length: 8, width: 8, height: 1 }, // height is a placeholder: real plate thickness not measured yet
+    filamentGrams: 60,
+    printTimeSeconds: time(180, 0),
+    modelUrl: '',
+  },
+  {
+    name: 'Half Deck Plate',
+    category: 'plate',
+    description:
+      'Sits on top of a 1 x 0.5 block as a platform for vehicles to drive on. Covers a 5 x 9 unit area; the plate itself measures 8 x 4 units.',
+    gridSize: { length: 8, width: 4, height: 1 }, // height is a placeholder, as above
+    filamentGrams: 30,
+    printTimeSeconds: time(90, 0),
+    modelUrl: '',
+  },
+  {
+    name: 'Single Snap Cube',
+    category: 'cube',
+    description: 'Connector cube with a male snap on one face.',
+    gridSize: { length: 1, width: 1, height: 1 },
+    filamentGrams: 3.3,
+    printTimeSeconds: time(12, 30),
+    modelUrl: MODEL_URL,
+  },
+  {
+    name: 'Double Snap Cube',
+    category: 'cube',
+    description: 'Connector cube with male snaps on two opposite faces.',
+    gridSize: { length: 1, width: 1, height: 1 },
+    filamentGrams: 4,
+    printTimeSeconds: time(15, 0),
+    modelUrl: '',
+  },
 ];

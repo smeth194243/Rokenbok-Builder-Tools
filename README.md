@@ -1,10 +1,16 @@
 # Rokenbok Tools
 
-Planning tools for people 3D-printing their own Rokenbok parts: a parts database, a filament/cost estimator, and (soon) a build footprint calculator.
+Planning tools for people 3D-printing their own Rokenbok parts: a parts database you can edit, a bill-of-materials builder with filament and cost estimates, and a footprint calculator.
+
+**New to Rokenbok?** &#9654; [What is Rokenbok? (YouTube)](https://www.youtube.com/watch?v=BdCk732aOdU)
 
 **Stack:** React (Vite) · Node.js / Express · MongoDB (Mongoose)
 
-> Status: weekend project, work in progress. Right now you get the parts database, a REST API, and a bill-of-materials builder (filament, print time, cost, spool usage) and a footprint calculator, on separate pages.
+> Status: weekend project, work in progress. The app has a bill-of-materials builder (filament, print time, cost, spool usage), a footprint calculator, and a parts manager, each on its own page, backed by a REST API.
+
+## What is Rokenbok?
+
+Rokenbok is a grid-based construction toy system that is no longer in production. Its plastic beams are getting brittle with age, so many hobbyists 3D-print replacement and extra parts, and big builds take up a lot of floor space, which makes planning hard. This app helps with both. For a quick introduction to the toy itself, watch [What is Rokenbok?](https://www.youtube.com/watch?v=BdCk732aOdU) (the same link appears under the title in the app).
 
 ## Project layout
 
@@ -49,7 +55,7 @@ Copy `server/.env.example` to `server/.env`. The defaults work with a local Mong
 ```
 npm run seed
 ```
-Safe to re-run: it updates existing parts by name instead of duplicating them.
+Safe to re-run: it only adds starter parts that are missing (matched by name), so parts you have edited in the app are left alone. To reset existing parts back to the values in the data file, run `npm run seed -- --update`.
 
 ### 6. Run the app
 ```
@@ -106,15 +112,15 @@ It works both ways: give it blocks or grid units to get exact real-world sizes, 
 | Field | Meaning |
 | --- | --- |
 | `name` | Unique part name |
-| `category` | `cube`, `beam`, or `riser` |
+| `category` | Free-form lowercase label, e.g. `cube`, `beam`, `riser`, `plate` |
 | `description` | Short description |
-| `gridSize` | Length/width/height in Rokenbok grid units |
-| `dimensionsMm` | Length/width/height in millimetres (1 unit = 20 mm) |
+| `gridSize` | Length/width/height in Rokenbok grid units (whole numbers, at least 1) |
+| `dimensionsMm` | Length/width/height in millimetres (1 unit = 20 mm). Optional when creating or updating: the server works it out from `gridSize` |
 | `filamentGrams` | Estimated filament for one print |
 | `printTimeSeconds` | Estimated print time for one print |
 | `modelUrl` | Link to the printable model |
 
-Starter parts are in `server/src/data/parts.js`; edit the numbers there and re-run `npm run seed`.
+Parts can be added, edited and deleted on the **Parts** page of the app. Starter parts are in `server/src/data/parts.js`; `npm run seed` adds any that are missing and never overwrites parts already in the database (use `npm run seed -- --update` to reset them). Print details for the newer starter parts (curved beams, deck plates, snap cubes) are estimates; refine them on the Parts page.
 
 ## Tests
 ```

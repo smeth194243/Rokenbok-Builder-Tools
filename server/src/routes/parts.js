@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import Part from '../models/Part.js';
+import { withDimensions } from '../services/parts.js';
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const part = await Part.create(req.body);
+    const part = await Part.create(withDimensions(req.body));
     res.status(201).json(part);
   } catch (err) {
     next(err);
@@ -51,7 +52,7 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    const part = await Part.findByIdAndUpdate(req.params.id, req.body, {
+    const part = await Part.findByIdAndUpdate(req.params.id, withDimensions(req.body), {
       new: true,
       runValidators: true,
     });
